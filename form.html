@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سیستم مدیریت محتوای مداحی</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --text-color: #2b2d42;
+            --bg-color: #f8f9fa;
+            --card-color: #ffffff;
+            --border-color: #dee2e6;
+            --success-color: #4cc9f0;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .dark-mode {
+            --primary-color: #4895ef;
+            --secondary-color: #4361ee;
+            --text-color: #f8f9fa;
+            --bg-color: #121212;
+            --card-color: #1e1e1e;
+            --border-color: #333333;
+            --shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            font-family: 'Vazirmatn', 'B Nazanin', Tahoma, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .theme-toggle:hover {
+            background-color: rgba(0,0,0,0.1);
+            transform: rotate(30deg);
+        }
+
+        .dark-mode .theme-toggle:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        .form-card {
+            background-color: var(--card-color);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 30px;
+            margin-bottom: 30px;
+            transition: all 0.3s;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .input-container {
+            position: relative;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--card-color);
+            color: var(--text-color);
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        input[type="date"] {
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234361ee' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3crect x='3' y='4' width='18' height='18' rx='2' ry='2'%3e%3c/rect%3e%3cline x1='16' y1='2' x2='16' y2='6'%3e%3c/line%3e%3cline x1='8' y1='2' x2='8' y2='6'%3e%3c/line%3e%3cline x1='3' y1='10' x2='21' y2='10'%3e%3c/line%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 15px;
+        }
+
+        .dark-mode input[type="date"] {
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234895ef' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3crect x='3' y='4' width='18' height='18' rx='2' ry='2'%3e%3c/rect%3e%3cline x1='16' y1='2' x2='16' y2='6'%3e%3c/line%3e%3cline x1='8' y1='2' x2='8' y2='6'%3e%3c/line%3e%3cline x1='3' y1='10' x2='21' y2='10'%3e%3c/line%3e%3c/svg%3e");
+        }
+
+        select {
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234361ee' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 15px;
+        }
+
+        .dark-mode select {
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234895ef' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-color);
+        }
+
+        button[type="submit"] {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 14px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        button[type="submit"]:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(67, 97, 238, 0.2);
+        }
+
+        button[type="submit"] i {
+            margin-left: 8px;
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 30px;
+            color: var(--text-color);
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .theme-toggle {
+                margin-top: 15px;
+                align-self: flex-end;
+            }
+        }
+
+        /* انیمیشن‌ها */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-card {
+            animation: fadeIn 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>سیستم مدیریت محتوای مداحی</h1>
+            <button class="theme-toggle" id="themeToggle" aria-label="تغییر تم">
+                <i class="fas fa-moon"></i>
+            </button>
+        </header>
+
+        <div class="form-card">
+            <form id="poemForm" action="https://formsubmit.co/abms13711@gmail.com" method="POST">
+                <input type="hidden" name="_template" value="table">
+                <input type="hidden" name="_next" value="https://yourwebsite.com/thanks.html">
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="receive_date">تاریخ دریافت</label>
+                        <div class="input-container">
+                            <i class="fas fa-calendar-alt input-icon"></i>
+                            <input type="date" id="receive_date" name="تاریخ دریافت" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="send_date">تاریخ ارسال</label>
+                        <div class="input-container">
+                            <i class="fas fa-paper-plane input-icon"></i>
+                            <input type="date" id="send_date" name="تاریخ ارسال" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="poem_name">نام قصیده</label>
+                        <div class="input-container">
+                            <i class="fas fa-book input-icon"></i>
+                            <input type="text" id="poem_name" name="نام قصیده" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="reciter">مداح</label>
+                        <div class="input-container">
+                            <i class="fas fa-user input-icon"></i>
+                            <input type="text" id="reciter" name="مداح" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="sender">فرستنده</label>
+                        <div class="input-container">
+                            <i class="fas fa-user-tie input-icon"></i>
+                            <input type="text" id="sender" name="فرستنده" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="type">نوع محتوا</label>
+                        <div class="input-container">
+                            <i class="fas fa-tags input-icon"></i>
+                            <select id="type" name="نوع" required>
+                                <option value="">-- انتخاب کنید --</option>
+                                <option value="مکساج">مکساج</option>
+                                <option value="مکساج توزیع">مکساج توزیع</option>
+                                <option value="دیگر">دیگر</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="arranger">تنظیم کننده</label>
+                        <div class="input-container">
+                            <i class="fas fa-music input-icon"></i>
+                            <select id="arranger" name="تنظیم کننده" required>
+                                <option value="">-- انتخاب کنید --</option>
+                                <option value="محمد حلیبد">محمد حلیبد</option>
+                                <option value="قاسم حمادی">قاسم حمادی</option>
+                                <option value="دیگر">دیگر</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="price">قیمت (دلار)</label>
+                        <div class="input-container">
+                            <i class="fas fa-dollar-sign input-icon"></i>
+                            <input type="text" id="price" name="قیمت" placeholder="مثال: 100" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="mixer">میکس کننده</label>
+                        <div class="input-container">
+                            <i class="fas fa-sliders-h input-icon"></i>
+                            <select id="mixer" name="میکس کننده" required>
+                                <option value="">-- انتخاب کنید --</option>
+                                <option value="علیرضا">علیرضا</option>
+                                <option value="احمد">احمد</option>
+                                <option value="دیگر">دیگر</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit">
+                    <i class="fas fa-save"></i> ذخیره اطلاعات
+                </button>
+            </form>
+
+            <div class="form-footer">
+                <p>سیستم مدیریت محتوای مداحی - نسخه 1.0.0</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // تنظیم تاریخ‌های پیش‌فرض
+        document.addEventListener('DOMContentLoaded', function() {
+            // تاریخ‌ها
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('receive_date').value = today;
+            
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            document.getElementById('send_date').value = tomorrow.toISOString().split('T')[0];
+
+            // بررسی وضعیت تم از localStorage
+            if (localStorage.getItem('darkMode') === 'enabled') {
+                document.body.classList.add('dark-mode');
+                document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
+            }
+
+            // بارگذاری فونت Vazirmatn
+            const link = document.createElement('link');
+            link.href = 'https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/fonts.css';
+            link.rel = 'stylesheet';
+            document.head.appendChild(link);
+        });
+
+        // تغییر تم
+        document.getElementById('themeToggle').addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+            
+            if (document.body.classList.contains('dark-mode')) {
+                this.innerHTML = '<i class="fas fa-sun"></i>';
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                this.innerHTML = '<i class="fas fa-moon"></i>';
+                localStorage.setItem('darkMode', 'disabled');
+            }
+        });
+
+        // اعتبارسنجی فرم
+        document.getElementById('poemForm').addEventListener('submit', function(e) {
+            const price = document.getElementById('price').value;
+            if (!/^\d+$/.test(price)) {
+                e.preventDefault();
+                alert('لطفاً قیمت را به صورت عددی وارد کنید (بدون علامت دلار)');
+                document.getElementById('price').focus();
+            }
+        });
+
+        // امکان اضافه کردن گزینه جدید به selectها
+        document.querySelectorAll('select').forEach(select => {
+            select.addEventListener('change', function() {
+                if (this.value === 'دیگر') {
+                    const newValue = prompt('لطفاً نام جدید را وارد کنید:');
+                    if (newValue && newValue.trim() !== '') {
+                        const newOption = document.createElement('option');
+                        newOption.value = newOption.text = newValue.trim();
+                        this.insertBefore(newOption, this.options[this.options.length - 1]);
+                        this.value = newValue.trim();
+                    } else {
+                        this.value = '';
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
